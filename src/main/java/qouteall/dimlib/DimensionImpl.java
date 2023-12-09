@@ -10,10 +10,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.storage.WorldData;
-import qouteall.q_misc_util.api.DimensionAPI;
-import qouteall.q_misc_util.mixin.dimension.IEMappedRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import qouteall.dimlib.ducks.IMappedRegistry;
+
+import java.util.HashSet;
 
 public class DimensionImpl {
+    
+    public static final Logger LOGGER = LoggerFactory.getLogger(DimensionImpl.class);
+    
+    public static final HashSet<String> STABLE_NAMESPACES = new HashSet<>();
+    public static boolean suppressExperimentalWarning = false;
     
     public static void directlyRegisterLevelStem(
         MinecraftServer server, ResourceLocation dimensionId, LevelStem levelStem
@@ -29,8 +37,8 @@ public class DimensionImpl {
         if (!levelStems.containsKey(dimensionId)) {
             // the vanilla freezing mechanism is used for validating dangling object references
             // for this API, that thing won't happen
-            boolean oldIsFrozen = ((IEMappedRegistry) levelStems).ip_getIsFrozen();
-            ((IEMappedRegistry) levelStems).ip_setIsFrozen(false);
+            boolean oldIsFrozen = ((IMappedRegistry) levelStems).dimlib_getIsFrozen();
+            ((IMappedRegistry) levelStems).dimlib_setIsFrozen(false);
             
             try {
                 levelStems.register(
@@ -40,11 +48,11 @@ public class DimensionImpl {
                 );
             }
             finally {
-                ((IEMappedRegistry) levelStems).ip_setIsFrozen(oldIsFrozen);
+                ((IMappedRegistry) levelStems).dimlib_setIsFrozen(oldIsFrozen);
             }
         }
         else {
-            DimensionAPI.LOGGER.error(
+            LOGGER.error(
                 "The dimension {} already exists",
                 dimensionId,
                 new Throwable()

@@ -9,7 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import qouteall.dimlib.api.DimensionAPI;
+import qouteall.dimlib.DimensionImpl;
+import qouteall.dimlib.config.DimLibConfig;
 
 @Mixin(WorldDimensions.class)
 public class MixinWorldDimensions {
@@ -21,7 +22,10 @@ public class MixinWorldDimensions {
         ResourceKey<LevelStem> resourceKey, LevelStem levelStem, CallbackInfoReturnable<Boolean> cir
     ) {
         String namespace = resourceKey.location().getNamespace();
-        if (DimensionAPI.isNamespaceStable(namespace)) {
+        if (DimLibConfig.suppressExperimentalWarning
+            || DimensionImpl.suppressExperimentalWarning
+            || DimensionImpl.STABLE_NAMESPACES.contains(namespace)
+        ) {
             cir.setReturnValue(true);
         }
     }

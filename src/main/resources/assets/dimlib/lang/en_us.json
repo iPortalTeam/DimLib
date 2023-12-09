@@ -1,0 +1,5 @@
+{
+  "dimlib.midnightconfig.title": "DimLib Config",
+  "dimlib.midnightconfig.suppressExperimentalWarning": "Suppress Experimental Warning",
+  "dimlib.midnightconfig.suppressExperimentalWarning.tooltip": "If enabled, it will not show \"Worlds using Experimental Settings are not supported\" warning screen when entering world."
+}

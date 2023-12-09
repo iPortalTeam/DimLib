@@ -20,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import qouteall.dimlib.api.DimensionAPI;
 
@@ -40,10 +41,9 @@ public class DimsCommand {
                             DimensionArgument.getDimension(context, "templateDimension");
                         String newDimensionId = StringArgumentType.getString(context, "newDimensionID");
                         
-                        ResourceLocation newDimId = new ResourceLocation(newDimensionId);
+                        ResourceLocation newDimId = parseDimensionId(context, newDimensionId);
                         
-                        if (newDimId.getNamespace().equals("minecraft")) {
-                            context.getSource().sendFailure(Component.literal("Invalid namespace"));
+                        if (newDimId == null) {
                             return 0;
                         }
                         
@@ -54,11 +54,6 @@ public class DimsCommand {
                         context.getSource().sendSuccess(() -> Component.literal(
                             "Dynamically added dimension %s".formatted(newDimensionId)
                         ), true);
-                        
-                        context.getSource().sendSuccess(
-                            () -> Component.literal("Warning: In the current version, dynamic dimension feature is still experimental."),
-                            false
-                        );
                         
                         return 0;
                     })
@@ -95,18 +90,13 @@ public class DimsCommand {
                     DimensionAPI.removeDimensionDynamically(dimension);
                     
                     context.getSource().sendSuccess(() -> Component.literal(
-                        "Dynamically removed dimension %s . Its world file is not yet deleted."
+                        ("Dynamically removed dimension %s . Its world file is not yet deleted." +
+                            "Note: if the datapack config for that dimesion exists, the dimension will be re-added after server restart.")
                             .formatted(dimension.dimension().location())
                     ), true);
                     
-                    context.getSource().sendSuccess(
-                        () -> Component.literal("Warning: In the current version, dynamic dimension feature is still experimental."),
-                        false
-                    );
-                    
                     return 0;
                 })
-            
             )
         );
         
@@ -155,6 +145,38 @@ public class DimsCommand {
         dispatcher.register(builder);
     }
     
+    @Nullable
+    private static ResourceLocation parseDimensionId(
+        CommandContext<CommandSourceStack> context, String newDimensionId
+    ) {
+        ResourceLocation newDimId;
+        try {
+            newDimId = new ResourceLocation(newDimensionId);
+        }
+        catch (Exception e) {
+            context.getSource().sendFailure(Component.literal("Invalid dimension id"));
+            return null;
+        }
+        
+        MinecraftServer server = context.getSource().getServer();
+        
+        if (newDimId.getNamespace().equals("minecraft")) {
+            context.getSource().sendFailure(
+                Component.literal("namespace cannot be minecraft")
+            );
+            return null;
+        }
+        
+        if (DimensionAPI.dimensionExists(server, newDimId)) {
+            context.getSource().sendFailure(
+                Component.literal("Dimension" + newDimId + " already exists")
+            );
+            return null;
+        }
+        
+        return newDimId;
+    }
+    
     private static int runAddDimension(
         CommandContext<CommandSourceStack> context, DimensionTemplate template
     ) {
@@ -162,26 +184,18 @@ public class DimsCommand {
             context, "newDimensionId"
         );
         
-        ResourceLocation newDimId = new ResourceLocation(newDimensionId);
+        ResourceLocation newDimId = parseDimensionId(context, newDimensionId);
         
-        MinecraftServer server = context.getSource().getServer();
-        
-        if (DimensionAPI.dimensionExists(server, newDimId)) {
-            context.getSource().sendFailure(
-                Component.literal("Dimension" + newDimId + " already exists")
-            );
+        if (newDimId == null) {
             return 0;
         }
+        
+        MinecraftServer server = context.getSource().getServer();
         
         DimensionAPI.addDimensionDynamically(
             server,
             newDimId,
             template.createLevelStem(server)
-        );
-        
-        context.getSource().sendSuccess(
-            () -> Component.literal("Warning: In the current version, dynamic dimension feature is still experimental."),
-            false
         );
         
         return 0;

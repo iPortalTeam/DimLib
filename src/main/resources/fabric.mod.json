@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"qouteall.dimlib.DimLibEntryClient"
+		],
+		"modmenu": [
+			"qouteall.dimlib.config.DimLibModmenuIntegration"
 		]
 	},
 	"mixins": [

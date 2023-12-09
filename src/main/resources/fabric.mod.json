@@ -1,33 +1,29 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "dimlib",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "DimLib",
+	"description": "Adds the functionality of dynamically adding and removing dimensions.",
 	"authors": [
-		"Me!"
+		"qouteall"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": ""
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/dimlib/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+          "qouteall.dimlib.DimLibEntry"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+			"qouteall.dimlib.DimLibEntryClient"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
+		"dimlib.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.0",
@@ -36,6 +32,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+
 	}
 }

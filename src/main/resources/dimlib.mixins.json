@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "qouteall.dimlib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "IEWorldBorder",
+    "MixinMappedRegistry",
+    "MixinMinecraftServer",
+    "MixinPlayerList",
+    "MixinWorldDimensions"
+  ],
+  "client": [
+    "client.IClientPacketListener",
+    "client.MixinMinecraft"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

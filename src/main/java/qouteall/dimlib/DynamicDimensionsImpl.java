@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import qouteall.dimlib.api.DimensionAPI;
 import qouteall.dimlib.ducks.IMappedRegistry;
 import qouteall.dimlib.ducks.IMinecraftServer;
-import qouteall.dimlib.mixin.IEWorldBorder;
+import qouteall.dimlib.mixin.common.IEWorldBorder;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package qouteall.dimlib.mixin;
+package qouteall.dimlib.mixin.common;
 
 import com.google.common.collect.Maps;
 import net.minecraft.resources.ResourceKey;

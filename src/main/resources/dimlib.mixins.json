@@ -3,11 +3,11 @@
   "package": "qouteall.dimlib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "IEWorldBorder",
-    "MixinMappedRegistry",
-    "MixinMinecraftServer",
-    "MixinPlayerList",
-    "MixinWorldDimensions"
+    "common.IEWorldBorder",
+    "common.MixinMappedRegistry",
+    "common.MixinMinecraftServer",
+    "common.MixinPlayerList",
+    "common.MixinWorldDimensions"
   ],
   "client": [
     "client.IClientPacketListener",

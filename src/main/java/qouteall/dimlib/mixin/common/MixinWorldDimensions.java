@@ -1,4 +1,4 @@
-package qouteall.dimlib.mixin;
+package qouteall.dimlib.mixin.common;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.resources.ResourceKey;

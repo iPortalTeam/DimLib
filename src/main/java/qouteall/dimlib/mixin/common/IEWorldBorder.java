@@ -1,4 +1,4 @@
-package qouteall.dimlib.mixin;
+package qouteall.dimlib.mixin.common;
 
 import net.minecraft.world.level.border.BorderChangeListener;
 import net.minecraft.world.level.border.WorldBorder;

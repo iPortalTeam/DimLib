@@ -1,4 +1,4 @@
-package qouteall.dimlib.mixin;
+package qouteall.dimlib.mixin.common;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.Connection;

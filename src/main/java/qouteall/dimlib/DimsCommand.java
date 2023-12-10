@@ -167,7 +167,7 @@ public class DimsCommand {
             return null;
         }
         
-        if (DimensionAPI.dimensionExists(server, newDimId)) {
+        if (DimensionAPI.dimensionExistsInRegistry(server, newDimId)) {
             context.getSource().sendFailure(
                 Component.literal("Dimension" + newDimId + " already exists")
             );

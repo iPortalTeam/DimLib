@@ -3,8 +3,6 @@ package qouteall.dimlib;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Lifecycle;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.MappedRegistry;
@@ -46,25 +44,6 @@ import java.util.List;
 
 public class DynamicDimensionsImpl {
     private static final Logger LOGGER = LogManager.getLogger();
-    
-    public static interface BeforeRemovingDimensionCallback {
-        void accept(ServerLevel world);
-    }
-    
-    public static final Event<BeforeRemovingDimensionCallback> beforeRemovingDimensionEvent =
-        EventFactory.createArrayBacked(
-            BeforeRemovingDimensionCallback.class,
-            (listeners) -> ((world) -> {
-                for (BeforeRemovingDimensionCallback listener : listeners) {
-                    try {
-                        listener.accept(world);
-                    }
-                    catch (Exception e) {
-                        LOGGER.error("Error during before removing dimension event", e);
-                    }
-                }
-            })
-        );
     
     public static boolean isRemovingDimension = false;
     
@@ -169,7 +148,7 @@ public class DynamicDimensionsImpl {
         LOGGER.info("Started Removing Dimension {}", dimension.location());
         
         ((IMinecraftServer) server).dimlib_addTask(() -> {
-            beforeRemovingDimensionEvent.invoker().accept(world);
+            DimensionAPI.SERVER_PRE_REMOVE_DIMENSION_EVENT.invoker().accept(world);
             
             evacuatePlayersFromDimension(world);
             

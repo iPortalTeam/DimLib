@@ -29,10 +29,10 @@ import java.util.function.Supplier;
 public class DimensionAPI {
     private static final Logger LOGGER = LogManager.getLogger();
     
+    /**
+     * See {@link DimensionAPI#SERVER_DIMENSIONS_LOAD_EVENT}
+     */
     public static interface ServerDimensionsLoadCallback {
-        /**
-         * See {@link DimensionAPI#SERVER_DIMENSIONS_LOAD_EVENT}
-         */
         void run(MinecraftServer server);
     }
     
@@ -85,9 +85,10 @@ public class DimensionAPI {
     }
     
     /**
-     * Check if a dimension exists.
+     * Check if a dimension exists in registry.
+     * This can be used when the server worlds are not yet initialized.
      */
-    public static boolean dimensionExists(
+    public static boolean dimensionExistsInRegistry(
         MinecraftServer server, ResourceLocation dimensionId
     ) {
         // if the server is not yet running, getLevel() doesn't work
@@ -103,7 +104,7 @@ public class DimensionAPI {
         ResourceLocation dimensionId,
         Supplier<LevelStem> levelStem
     ) {
-        if (dimensionExists(server, dimensionId)) {
+        if (dimensionExistsInRegistry(server, dimensionId)) {
             return;
         }
         
@@ -142,17 +143,17 @@ public class DimensionAPI {
         DynamicDimensionsImpl.removeDimensionDynamically(world);
     }
     
+    /**
+     * see {@link DimensionAPI#SERVER_DIMENSION_DYNAMIC_UPDATE_EVENT}
+     */
     public static interface ServerDynamicUpdateListener {
-        /**
-         * see {@link DimensionAPI#SERVER_DIMENSION_DYNAMIC_UPDATE_EVENT}
-         */
         void run(MinecraftServer server, Set<ResourceKey<Level>> dimensions);
     }
     
+    /**
+     * see {@link DimensionAPI#CLIENT_DIMENSION_UPDATE_EVENT}
+     */
     public static interface ClientDynamicUpdateListener {
-        /**
-         * see {@link DimensionAPI#CLIENT_DIMENSION_UPDATE_EVENT}
-         */
         void run(Set<ResourceKey<Level>> dimensions);
     }
     
@@ -185,6 +186,7 @@ public class DimensionAPI {
     
     /**
      * Is the dimension still in the server.
+     * Can be used when the server is running.
      */
     public static boolean isDimensionAlive(ServerLevel world) {
         return world.getServer().getLevel(world.dimension()) == world;
@@ -234,4 +236,29 @@ public class DimensionAPI {
     ) {
         DimensionTemplate.registerDimensionTemplate(name, dimensionTemplate);
     }
+    
+    /**
+     * see {@link DimensionAPI#SERVER_PRE_REMOVE_DIMENSION_EVENT}
+     */
+    public static interface PreRemoveDimensionCallback {
+        void accept(ServerLevel world);
+    }
+    
+    /**
+     * This event is triggered right before dynamically removing a dimension on server.
+     */
+    public static final Event<PreRemoveDimensionCallback> SERVER_PRE_REMOVE_DIMENSION_EVENT =
+        EventFactory.createArrayBacked(
+            PreRemoveDimensionCallback.class,
+            (listeners) -> ((world) -> {
+                for (PreRemoveDimensionCallback listener : listeners) {
+                    try {
+                        listener.accept(world);
+                    }
+                    catch (Exception e) {
+                        LOGGER.error("Error during before removing dimension event", e);
+                    }
+                }
+            })
+        );
 }

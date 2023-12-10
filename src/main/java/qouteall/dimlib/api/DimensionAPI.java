@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qouteall.dimlib.ClientDimensionInfo;
 import qouteall.dimlib.DimensionImpl;
+import qouteall.dimlib.DimensionTemplate;
 import qouteall.dimlib.DynamicDimensionsImpl;
 import qouteall.dimlib.ducks.IMinecraftServer;
 
@@ -221,5 +222,16 @@ public class DimensionAPI {
     @Environment(EnvType.CLIENT)
     public static Map<ResourceKey<Level>, ResourceKey<DimensionType>> getClientDimensionIdToTypeMap() {
         return ClientDimensionInfo.getDimensionIdToType();
+    }
+    
+    /**
+     * The dimension templates are used in `/dims add_dimension` command.
+     * Should register during initialization.
+     * The name should not contain spaces.
+     */
+    public static void registerDimensionTemplate(
+        String name, DimensionTemplate dimensionTemplate
+    ) {
+        DimensionTemplate.registerDimensionTemplate(name, dimensionTemplate);
     }
 }

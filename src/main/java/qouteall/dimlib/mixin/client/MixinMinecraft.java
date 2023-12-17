@@ -12,6 +12,8 @@ import qouteall.dimlib.ClientDimensionInfo;
 public class MixinMinecraft {
     @Inject(method = "updateLevelInEngines", at = @At("HEAD"))
     private void onClientReset(ClientLevel level, CallbackInfo ci) {
-        ClientDimensionInfo.cleanup();
+        if (level == null) {
+            ClientDimensionInfo.cleanup();
+        }
     }
 }

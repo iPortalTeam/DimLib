@@ -8,8 +8,8 @@
 		"qouteall"
 	],
 	"contact": {
-		"homepage": "",
-		"sources": ""
+		"homepage": "https://github.com/iPortalTeam/DimLib",
+		"sources": "https://github.com/iPortalTeam/DimLib"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/dimlib/icon.png",

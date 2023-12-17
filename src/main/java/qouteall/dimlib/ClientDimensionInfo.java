@@ -7,12 +7,16 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class ClientDimensionInfo {
+    private static final Logger LOGGER = LogManager.getLogger();
+    
     public static ImmutableSet<ResourceKey<Level>> dimensionIds;
     public static ImmutableMap<ResourceKey<Level>, ResourceKey<DimensionType>> dimensionIdToType;
     
@@ -36,8 +40,9 @@ public class ClientDimensionInfo {
         dimensionIds = dimensionIdToType.keySet();
     }
     
-    // this is not API
     public static void cleanup() {
-    
+        LOGGER.info("Cleaning up client dimension info");
+        dimensionIds = null;
+        dimensionIdToType = null;
     }
 }

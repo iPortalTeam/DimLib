@@ -90,8 +90,8 @@ public class DimsCommand {
                     DimensionAPI.removeDimensionDynamically(dimension);
                     
                     context.getSource().sendSuccess(() -> Component.literal(
-                        ("Dynamically removed dimension %s . Its world file is not yet deleted." +
-                            "Note: if the datapack config for that dimesion exists, the dimension will be re-added after server restart.")
+                        ("Dynamically removed dimension %s . Its world file is not yet deleted. " +
+                            "Note: if the datapack config for that dimension exists, the dimension will be re-added after server restart.")
                             .formatted(dimension.dimension().location())
                     ), true);
                     

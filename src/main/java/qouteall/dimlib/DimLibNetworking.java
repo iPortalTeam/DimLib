@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 import qouteall.dimlib.api.DimensionAPI;
 import qouteall.dimlib.mixin.client.IClientPacketListener;
 
-import java.util.stream.Collectors;
-
 public class DimLibNetworking {
     public static final Logger LOGGER = LoggerFactory.getLogger(DimLibNetworking.class);
     
@@ -107,9 +105,7 @@ public class DimLibNetworking {
         public void handleOnNetworkingThread(ClientGamePacketListener listener) {
             LOGGER.info(
                 "Client received dimension info\n{}",
-                dimIdToTypeIdTag.getAllKeys().stream()
-                    .map(k -> k + " - " + dimIdToTypeIdTag.getString(k))
-                    .collect(Collectors.joining("\n"))
+                String.join("\n", dimIdToTypeIdTag.getAllKeys())
             );
             
             var dimIdToDimType = this.toMap();

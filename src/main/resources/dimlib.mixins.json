@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.IClientPacketListener",
+    "client.MixinBackupConfirmScreen",
     "client.MixinMinecraft"
   ],
   "injectors": {

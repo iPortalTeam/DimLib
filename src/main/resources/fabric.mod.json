@@ -3,13 +3,14 @@
 	"id": "dimlib",
 	"version": "${version}",
 	"name": "DimLib",
-	"description": "Adds the functionality of dynamically adding and removing dimensions.",
+	"description": "Adds the functionality of dynamically adding and removing dimensions.\nAlso allow disabling 'Experimental Settings not supported' warning screen.",
 	"authors": [
 		"qouteall"
 	],
 	"contact": {
 		"homepage": "https://github.com/iPortalTeam/DimLib",
-		"sources": "https://github.com/iPortalTeam/DimLib"
+		"sources": "https://github.com/iPortalTeam/DimLib",
+		"issues": "https://github.com/iPortalTeam/DimLib/issues"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/dimlib/icon.png",
@@ -36,5 +37,10 @@
 	},
 	"suggests": {
 
+	},
+	"custom": {
+		"modmenu": {
+			"badges": ["library"]
+		}
 	}
 }

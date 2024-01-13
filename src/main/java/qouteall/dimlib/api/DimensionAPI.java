@@ -166,7 +166,12 @@ public class DimensionAPI {
             ServerDynamicUpdateListener.class,
             arr -> (server, dims) -> {
                 for (ServerDynamicUpdateListener listener : arr) {
-                    listener.run(server, dims);
+                    try {
+                        listener.run(server, dims);
+                    }
+                    catch (Exception e) {
+                        LOGGER.error("Error during dimension update event", e);
+                    }
                 }
             }
         );
@@ -179,7 +184,12 @@ public class DimensionAPI {
             ClientDynamicUpdateListener.class,
             arr -> (set) -> {
                 for (ClientDynamicUpdateListener listener : arr) {
-                    listener.run(set);
+                    try {
+                        listener.run(set);
+                    }
+                    catch (Exception e) {
+                        LOGGER.error("Error during dimension update event", e);
+                    }
                 }
             }
         );

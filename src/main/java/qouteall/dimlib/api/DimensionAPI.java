@@ -41,7 +41,7 @@ public class DimensionAPI {
      * Inside this event, you can:
      * - use {@link MinecraftServer#registryAccess()} and {@link RegistryAccess#registryOrThrow(ResourceKey)} to access registries (including dimension type registry)
      * - use {@link MinecraftServer#getWorldData()} {@link WorldData#worldGenOptions()} to access world information like seed.
-     * - use {@link DimensionAPI#addDimension(MinecraftServer, ResourceLocation, LevelStem)}.
+     * - use {@link DimensionAPI#addDimension(MinecraftServer, ResourceLocation, LevelStem)} to add dimension.
      */
     public static final Event<ServerDimensionsLoadCallback> SERVER_DIMENSIONS_LOAD_EVENT =
         EventFactory.createArrayBacked(
@@ -113,7 +113,7 @@ public class DimensionAPI {
     
     /**
      * Add a new dimension when the server is running.
-     * Cannot only be used when server is running.
+     * Can only be used when server is running.
      * The new dimension's config will be saved in the `level.dat` file.
      */
     public static void addDimensionDynamically(

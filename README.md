@@ -17,7 +17,9 @@ All APIs are in `DimensionAPI` class. You can refer to the javadoc.
 
 Dynamically add a new dimension based on a preset.
 
-Example: `/dims add_dimension "aaa:ccc" skyland`
+Example: `/dims add_dimension "aaa:ccc" void`
+
+Currently, the only built-in preset is `void`. Other mods can add presets via the API.
 
 #### `/dims clone_dimension <templateDimension> <newDimensionID>`
 
@@ -36,3 +38,17 @@ This command will not delete the world saving of that dimension.
 #### `/dims view_dim_config <dimension>`
 
 Show the dimension config of a dimension. It includes the dimension type id and chunk generator config.
+
+### Configure Dependency
+
+Add this into `repositories`
+```
+maven { url 'https://jitpack.io' }
+```
+
+Add this into `dependencies`
+```
+modApi("com.github.iPortalTeam:DimLib:${dimlib_version}") {
+    exclude(group: "net.fabricmc.fabric-api")
+}
+```

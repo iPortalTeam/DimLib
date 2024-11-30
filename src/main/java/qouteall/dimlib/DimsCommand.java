@@ -131,7 +131,7 @@ public class DimsCommand {
                     MappedRegistry<LevelStem> dimensionRegistry =
                         DimensionImpl.getDimensionRegistry(world.getServer());
                     
-                    LevelStem levelStem = dimensionRegistry.get(world.dimension().location());
+                    LevelStem levelStem = dimensionRegistry.getValue(world.dimension().location());
                     
                     if (levelStem == null) {
                         context.getSource().sendFailure(

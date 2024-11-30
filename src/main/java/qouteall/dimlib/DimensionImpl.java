@@ -33,7 +33,7 @@ public class DimensionImpl {
         WorldOptions worldOptions = worldData.worldGenOptions();
         
         MappedRegistry<LevelStem> levelStems = (MappedRegistry<LevelStem>)
-            registryAccess.registryOrThrow(Registries.LEVEL_STEM);
+            registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
         
         if (!levelStems.containsKey(dimensionId)) {
             // the vanilla freezing mechanism is used for validating dangling object references
@@ -63,7 +63,7 @@ public class DimensionImpl {
     
     public static MappedRegistry<LevelStem> getDimensionRegistry(MinecraftServer server) {
         return ((MappedRegistry<LevelStem>)
-            server.registryAccess().registryOrThrow(Registries.LEVEL_STEM)
+            server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM)
         );
     }
 }

@@ -51,7 +51,7 @@ public class DimLibNetworking {
         
         public static DimSyncPacket createPacket(MinecraftServer server) {
             RegistryAccess registryManager = server.registryAccess();
-            Registry<DimensionType> dimensionTypes = registryManager.registryOrThrow(Registries.DIMENSION_TYPE);
+            Registry<DimensionType> dimensionTypes = registryManager.lookupOrThrow(Registries.DIMENSION_TYPE);
             
             CompoundTag dimIdToDimTypeId = new CompoundTag();
             for (ServerLevel world : server.getAllLevels()) {

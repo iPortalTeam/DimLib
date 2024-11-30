@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import qouteall.dimlib.DimLibEntry;
 import qouteall.dimlib.ducks.IMappedRegistry;
 
 import java.util.List;
@@ -24,10 +25,6 @@ public abstract class MixinMappedRegistry<T> implements IMappedRegistry {
     @Shadow
     @Final
     private Map<ResourceLocation, Holder.Reference<T>> byLocation;
-    
-    @Shadow
-    @Final
-    private static Logger LOGGER;
     
     @Shadow
     public abstract @Nullable T byId(int id);
@@ -74,12 +71,12 @@ public abstract class MixinMappedRegistry<T> implements IMappedRegistry {
      */
     @Override
     public boolean dimlib_forceRemove(ResourceLocation id) {
-        LOGGER.debug("[DimLib] Trying to remove {} from {}", id, this.key);
+        DimLibEntry.LOGGER.debug("[DimLib] Trying to remove {} from {}", id, this.key);
         
         Holder.Reference<T> holder = byLocation.remove(id);
         
         if (holder == null) {
-            LOGGER.debug("[DimLib] {} not found in {} when trying to remove", id, this.key);
+            DimLibEntry.LOGGER.debug("[DimLib] {} not found in {} when trying to remove", id, this.key);
             return false;
         }
         
@@ -89,7 +86,7 @@ public abstract class MixinMappedRegistry<T> implements IMappedRegistry {
         int intId = toId.getInt(value);
         
         if (intId == -1) {
-            LOGGER.error("[DimLib] missing integer id for {} {}", value, id);
+            DimLibEntry.LOGGER.error("[DimLib] missing integer id for {} {}", value, id);
         }
         else {
             toId.removeInt(value);

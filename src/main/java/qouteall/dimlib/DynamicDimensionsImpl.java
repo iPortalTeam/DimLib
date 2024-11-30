@@ -41,6 +41,7 @@ import qouteall.dimlib.ducks.IMinecraftServer;
 import qouteall.dimlib.mixin.common.IEWorldBorder;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 public class DynamicDimensionsImpl {
@@ -111,7 +112,7 @@ public class DynamicDimensionsImpl {
          * {@link WorldGenSettings#encode(DynamicOps, WorldOptions, RegistryAccess)} ,
          * so it will be saved into level.dat
          * */
-        Registry<LevelStem> levelStemRegistry = server.registryAccess().registryOrThrow(Registries.LEVEL_STEM);
+        Registry<LevelStem> levelStemRegistry = server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
         ((IMappedRegistry) levelStemRegistry).dimlib_setIsFrozen(false);
         ((MappedRegistry<LevelStem>) levelStemRegistry).register(
             ResourceKey.create(Registries.LEVEL_STEM, dimensionId),
@@ -213,7 +214,7 @@ public class DynamicDimensionsImpl {
             
             // force remove it from registry, so it will not be saved into level.dat
             Registry<LevelStem> levelStemRegistry = server.registryAccess()
-                .registryOrThrow(Registries.LEVEL_STEM);
+                .lookupOrThrow(Registries.LEVEL_STEM);
             ((IMappedRegistry) levelStemRegistry).dimlib_forceRemove(dimension.location());
             
             LOGGER.info("Removed Dimension {}", dimension.location());
@@ -260,7 +261,8 @@ public class DynamicDimensionsImpl {
             player.teleportTo(
                 overworld,
                 sharedSpawnPos.getX(), sharedSpawnPos.getY(), sharedSpawnPos.getZ(),
-                0, 0
+                new HashSet<>(),
+                0, 0, true
             );
             player.sendSystemMessage(
                 Component.literal(

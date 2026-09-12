@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.8-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 
 	id "me.modmuss50.mod-publish-plugin" version "0.3.5"
@@ -30,22 +30,15 @@ dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-	mappings loom.layered() {
-		officialMojangMappings() {
-			setNameSyntheticMembers(false)
-		}
-		parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03")
-	}
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
+	implementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
 	include "maven.modrinth:midnightlib:${project.midnightlib_version}"
 
-	modCompileOnly "maven.modrinth:modmenu:${modmenu_version}"
-	modLocalRuntime "maven.modrinth:modmenu:${modmenu_version}"
+	compileOnly "maven.modrinth:modmenu:${modmenu_version}"
+	localRuntime "maven.modrinth:modmenu:${modmenu_version}"
 }
 
 processResources {
@@ -57,7 +50,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 25
 }
 
 java {
@@ -66,8 +59,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -94,7 +87,7 @@ publishing {
 }
 
 publishMods {
-	file = remapJar.archiveFile
+	file = jar.archiveFile
 	changelog = file("changelog.md").text
 	type = ALPHA
 	modLoaders.add("fabric")

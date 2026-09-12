@@ -83,12 +83,12 @@ public class DimLibNetworking {
             ImmutableMap.Builder<ResourceKey<Level>, ResourceKey<DimensionType>> builder =
                 new ImmutableMap.Builder<>();
 
-            for (String key : tag.getAllKeys()) {
+            for (String key : tag.keySet()) {
                 ResourceKey<Level> dimId = ResourceKey.create(
                     Registries.DIMENSION,
                     Identifier.parse(key)
                 );
-                String dimTypeId = tag.getString(key);
+                String dimTypeId = tag.getString(key).orElseThrow();
                 ResourceKey<DimensionType> dimType = ResourceKey.create(
                     Registries.DIMENSION_TYPE,
                     Identifier.parse(dimTypeId)
@@ -108,7 +108,7 @@ public class DimLibNetworking {
 
             LOGGER.info(
                 "Client received dimension info\n{}",
-                String.join("\n", dimIdToTypeIdTag.getAllKeys())
+                String.join("\n", dimIdToTypeIdTag.keySet())
             );
 
             var dimIdToDimType = this.toMap();
@@ -127,7 +127,7 @@ public class DimLibNetworking {
     }
 
     public static void init() {
-        PayloadTypeRegistry.playS2C().register(
+        PayloadTypeRegistry.clientboundPlay().register(
             DimSyncPacket.TYPE, DimSyncPacket.CODEC
         );
     }

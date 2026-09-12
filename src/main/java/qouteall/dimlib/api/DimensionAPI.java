@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
 import net.minecraft.world.level.storage.WorldData;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -39,8 +40,8 @@ public class DimensionAPI {
     /**
      * This event is fired when loading custom dimensions when the server is starting.
      * Inside this event, you can:
-     * - use {@link MinecraftServer#registryAccess()} and {@link RegistryAccess#registryOrThrow(ResourceKey)} to access registries (including dimension type registry)
-     * - use {@link MinecraftServer#getWorldData()} {@link WorldData#worldGenOptions()} to access world information like seed.
+     * - use {@link MinecraftServer#registryAccess()} and {@link RegistryAccess#lookupOrThrow(ResourceKey)} to access registries (including dimension type registry)
+     * - use {@link MinecraftServer#getWorldData()} {@link WorldGenSettings#options()} to access world information like seed.
      * - use {@link DimensionAPI#addDimension(MinecraftServer, Identifier, LevelStem)} to add dimension.
      */
     public static final Event<ServerDimensionsLoadCallback> SERVER_DIMENSIONS_LOAD_EVENT =

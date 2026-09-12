@@ -29,9 +29,6 @@ public class DimensionImpl {
     ) {
         RegistryAccess.Frozen registryAccess = server.registryAccess();
 
-        WorldData worldData = server.getWorldData();
-        WorldOptions worldOptions = worldData.worldGenOptions();
-
         MappedRegistry<LevelStem> levelStems = (MappedRegistry<LevelStem>)
             registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 

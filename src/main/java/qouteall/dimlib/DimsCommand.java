@@ -17,8 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -36,7 +34,7 @@ public class DimsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands
             .literal("dims")
-            .requires(source -> source.hasPermission(2));
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
         builder.then(Commands
             .literal("clone_dimension")

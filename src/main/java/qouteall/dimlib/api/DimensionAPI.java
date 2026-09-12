@@ -6,13 +6,13 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,20 +28,20 @@ import java.util.function.Supplier;
 
 public class DimensionAPI {
     private static final Logger LOGGER = LogManager.getLogger();
-    
+
     /**
      * See {@link DimensionAPI#SERVER_DIMENSIONS_LOAD_EVENT}
      */
     public static interface ServerDimensionsLoadCallback {
         void run(MinecraftServer server);
     }
-    
+
     /**
      * This event is fired when loading custom dimensions when the server is starting.
      * Inside this event, you can:
-     * - use {@link MinecraftServer#registryAccess()} and {@link RegistryAccess#registryOrThrow(ResourceKey)} to access registries (including dimension type registry)
-     * - use {@link MinecraftServer#getWorldData()} {@link WorldData#worldGenOptions()} to access world information like seed.
-     * - use {@link DimensionAPI#addDimension(MinecraftServer, ResourceLocation, LevelStem)} to add dimension.
+     * - use {@link MinecraftServer#registryAccess()} and {@link RegistryAccess#lookupOrThrow(ResourceKey)} to access registries (including dimension type registry)
+     * - use {@link MinecraftServer#getWorldData()} {@link WorldGenSettings#options()} to access world information like seed.
+     * - use {@link DimensionAPI#addDimension(MinecraftServer, Identifier, LevelStem)} to add dimension.
      */
     public static final Event<ServerDimensionsLoadCallback> SERVER_DIMENSIONS_LOAD_EVENT =
         EventFactory.createArrayBacked(
@@ -57,7 +57,7 @@ public class DimensionAPI {
                 }
             })
         );
-    
+
     /**
      * Add a new dimension.
      * Can be used both when server is running or during {@link DimensionAPI#SERVER_DIMENSIONS_LOAD_EVENT}.
@@ -66,7 +66,7 @@ public class DimensionAPI {
      */
     public static void addDimension(
         MinecraftServer server,
-        ResourceLocation dimensionId,
+        Identifier dimensionId,
         LevelStem levelStem
     ) {
         if (((IMinecraftServer) server).dimlib_getIsFinishedCreatingWorlds()) {
@@ -83,34 +83,34 @@ public class DimensionAPI {
             }
         }
     }
-    
+
     /**
      * Check if a dimension exists in registry.
      * This can be used when the server worlds are not yet initialized.
      */
     public static boolean dimensionExistsInRegistry(
-        MinecraftServer server, ResourceLocation dimensionId
+        MinecraftServer server, Identifier dimensionId
     ) {
         // if the server is not yet running, getLevel() doesn't work
         return DimensionImpl.getDimensionRegistry(server).containsKey(dimensionId);
     }
-    
+
     /**
-     * Similar to {@link DimensionAPI#addDimension(MinecraftServer, ResourceLocation, LevelStem)},
+     * Similar to {@link DimensionAPI#addDimension(MinecraftServer, Identifier, LevelStem)},
      * but will not add the dimension if it already exists.
      */
     public static void addDimensionIfNotExists(
         MinecraftServer server,
-        ResourceLocation dimensionId,
+        Identifier dimensionId,
         Supplier<LevelStem> levelStem
     ) {
         if (dimensionExistsInRegistry(server, dimensionId)) {
             return;
         }
-        
+
         addDimension(server, dimensionId, levelStem.get());
     }
-    
+
     /**
      * Add a new dimension when the server is running.
      * Can only be used when server is running.
@@ -118,13 +118,13 @@ public class DimensionAPI {
      */
     public static void addDimensionDynamically(
         MinecraftServer server,
-        ResourceLocation dimensionId,
+        Identifier dimensionId,
         LevelStem levelStem
     ) {
         Validate.isTrue(server.isRunning(), "The server is not running");
         DynamicDimensionsImpl.addDimensionDynamically(server, dimensionId, levelStem);
     }
-    
+
     /**
      * Remove a dimension dynamically.
      * Cannot be used during server initialization.
@@ -139,24 +139,24 @@ public class DimensionAPI {
             );
             return;
         }
-        
+
         DynamicDimensionsImpl.removeDimensionDynamically(world);
     }
-    
+
     /**
      * see {@link DimensionAPI#SERVER_DIMENSION_DYNAMIC_UPDATE_EVENT}
      */
     public static interface ServerDynamicUpdateListener {
         void run(MinecraftServer server, Set<ResourceKey<Level>> dimensions);
     }
-    
+
     /**
      * see {@link DimensionAPI#CLIENT_DIMENSION_UPDATE_EVENT}
      */
     public static interface ClientDynamicUpdateListener {
         void run(Set<ResourceKey<Level>> dimensions);
     }
-    
+
     /**
      * Will be triggered when the server dynamically add or remove a dimension.
      * Does not trigger during server initialization.
@@ -175,7 +175,7 @@ public class DimensionAPI {
                 }
             }
         );
-    
+
     /**
      * Will be triggered when the client receives dimension data synchronization.
      */
@@ -193,7 +193,7 @@ public class DimensionAPI {
                 }
             }
         );
-    
+
     /**
      * Is the dimension still in the server.
      * Can be used when the server is running.
@@ -201,7 +201,7 @@ public class DimensionAPI {
     public static boolean isDimensionAlive(ServerLevel world) {
         return world.getServer().getLevel(world.dimension()) == world;
     }
-    
+
     /**
      * Disable the "Worlds using Experimental Settings are not supported" warning screen.
      * This should be called during initialization.
@@ -209,7 +209,7 @@ public class DimensionAPI {
     public static void suppressExperimentalWarning() {
         DimensionImpl.suppressExperimentalWarning = true;
     }
-    
+
     /**
      * Mark a namespace as "stable".
      * Then the dimensions with that namespace will not cause "Worlds using Experimental Settings are not supported" warning screen to appear (but other dimensions may do).
@@ -219,7 +219,7 @@ public class DimensionAPI {
     public static void suppressExperimentalWarningForNamespace(String namespace) {
         DimensionImpl.STABLE_NAMESPACES.add(namespace);
     }
-    
+
     /**
      * @return The dimension ids. Can be called in client.
      */
@@ -227,7 +227,7 @@ public class DimensionAPI {
     public static Set<ResourceKey<Level>> getClientDimensionIds() {
         return ClientDimensionInfo.getDimensionIds();
     }
-    
+
     /**
      * @return The map from dimension id to dimension type id. Can be called in client.
      */
@@ -235,7 +235,7 @@ public class DimensionAPI {
     public static Map<ResourceKey<Level>, ResourceKey<DimensionType>> getClientDimensionIdToTypeMap() {
         return ClientDimensionInfo.getDimensionIdToType();
     }
-    
+
     /**
      * The dimension templates are used in `/dims add_dimension` command.
      * Should register during initialization.
@@ -246,14 +246,14 @@ public class DimensionAPI {
     ) {
         DimensionTemplate.registerDimensionTemplate(name, dimensionTemplate);
     }
-    
+
     /**
      * see {@link DimensionAPI#SERVER_PRE_REMOVE_DIMENSION_EVENT}
      */
     public static interface PreRemoveDimensionCallback {
         void accept(ServerLevel world);
     }
-    
+
     /**
      * This event is triggered right before dynamically removing a dimension on server.
      */

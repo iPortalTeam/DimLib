@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import qouteall.dimlib.api.DimensionAPI;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DimsCommand {
@@ -74,9 +73,7 @@ public class DimsCommand {
             String dimTemplateId = e.getKey();
             DimensionTemplate dimensionTemplate = e.getValue();
             addDimensionCommandNode.then(Commands.literal(dimTemplateId)
-                .executes(context -> {
-                    return runAddDimension(context, dimensionTemplate);
-                })
+                .executes(context -> runAddDimension(context, dimensionTemplate))
             );
         }
 

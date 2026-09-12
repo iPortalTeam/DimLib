@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import qouteall.dimlib.api.DimensionAPI;
 import qouteall.dimlib.ducks.IMappedRegistry;
 import qouteall.dimlib.ducks.IMinecraftServer;
-import qouteall.dimlib.mixin.common.MixinMinecraftServer;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -216,7 +215,7 @@ public class DynamicDimensionsImpl {
         ServerLevel overworld = server.getLevel(Level.OVERWORLD);
         Validate.notNull(overworld, "Overworld is null");
 
-        List<ServerPlayer> players = world.getPlayers(p -> true);
+        List<ServerPlayer> players = world.getPlayers(_ -> true);
 
         BlockPos sharedSpawnPos = overworld.getRespawnData().pos();
 
